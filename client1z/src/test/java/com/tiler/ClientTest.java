@@ -1,17 +1,25 @@
 package com.tiler;
 
-import org.junit.Assert;
 import org.testng.annotations.Test;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ClientTest {
     @Test
     public void testFormatLog() {
-        Client client = new Client(new Config(), "testuser");
-        String message = "Проверка";
-        String expected = "[2023-04-24 12:34:56] Проверка\n";
-        String actual = client.formatLog(message);
-        Assert.assertEquals(expected, actual);
+        Config config = new Config();
+        Client client = new Client(config, "testUser");
+        String message = "проверка сообщения";
+        String logMessage = client.formatLog(message);
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String expectedTime = now.format(formatter);
+        String expectedLogMessage = String.format("[%s] %s%n", expectedTime, message);
+
+        assertEquals(expectedLogMessage.trim(), logMessage.trim());
     }
 }
